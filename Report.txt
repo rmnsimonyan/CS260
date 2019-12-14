@@ -1,0 +1,10 @@
+Stage 1
+
+After applying all the Binary Layers onto four assigned images without pre-manimulations, we observe a behavior close to the standard one for all the pictures. However, we notice that
+1. The hair is also captured when applying the Binary Layer 0 as opposed to the definition of standard behavior. 
+2. Binary Layer 1 extracts not as many face pixels as does Binary Layer 0. Binary Layer 0 encompasses too large an area.
+Binary Layers 2 and 3 seem to be working on these images not bad in terms of the standard behavior. However, Binary Layer 2 clearly extracts also an ear area in the images 99, 100, 102 (on 101 ear is not visible) as opposed to the standard behavior. We can also say that Binary Layer 2 also extracts the regions mainly concentrated on lips area, rather than lower nose, also it captures some of the nose area.
+
+Applying the Blurring filter after the Binary Layer application only makes the extracted region less recognizable. On the other hand, the median filter applied after the Binary Layers helps to smoothen the extracted region by filling the gaps in the structure. So it is reasonable to incorporate this operation in the last stage of the averaged optimal filter.  
+
+Applying the Gaussian blur, min and max filter before the layers helps to smoothen the resulting regions in all cases, blurring giving the most smooth regions. While changing the radius of the filters we notice that 
