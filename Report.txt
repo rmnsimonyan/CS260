@@ -1,4 +1,5 @@
 Stage 1
+__________________________________________________________________________________________________________________________________
 
 After applying all the Binary Layers onto four assigned images without pre-manimulations, we observe a behavior close to the standard one for all the pictures. However, we notice that
 1. The hair is also captured when applying the Binary Layer 0 as opposed to the definition of standard behavior. 
@@ -11,4 +12,28 @@ Applying the Gaussian blur, min and max filter before the layers helps to smooth
 
 Thus we suggest as an averaged optimal filter the Gaussian Blur with radius around 2 applied before the Binary Layers and the Median filter with radius 0.5-1 applied after the Binary Layers. The other radii significantly away from the mentioned ranges eliminate some structures that may be worth capturing.
 
-For the next task on the investigation of the 
+For the next task on the investigation of the head rotations and smiling we have observed that the structures like mouth, ears or nose that are captured in the straight-looking image are still recognized and captured in the rotated-head image. Skin is captured as well when applying the Binary Layer 1. Smiling also doesn't change the general behavior after Layers application. The teeth are captured as black regions from Binary Layer 0 and their boundaries are captured after applying the Binary Layer 1.
+
+
+Stage 2
+__________________________________________________________________________________________________________________________________
+
+
+
+Stage 3
+__________________________________________________________________________________________________________________________________
+
+In this part we have tried to differentiate if teeth are visible on the face image, ie in our particular dataset case - if the person in the image is smiling with teeth. The observation was that the Binary Layer 0 extracts teeth as fully black regions. Hence the task was to augment/ smoothen to make it more visible and naturally remove all other surrounding regions extracted by the Binary Layer 0. To augment the region Maximum filter was used. With or without consequent Gaussian Blurring the Binary Layer 0 was applied. Next, the Median Filter was applied to remove the thin regions and leave only the thick segregations/islands (this behavior was observed during the trials in the previous stages) - supposedly the only visible segregation is to be the mouth area produced by teeth. Naturally, the images where the teeth are not visible do not display this pattern. Unfortunately, after the described sequence of operations a number of other islands/regions are formed. To tackle this problem we extracted the mouth region by the Binary Layer 3 from the original image and smoothen the extracted region by the Min filter. Afterwards, the AND binary operation was applied to the latest extracted mouth region and the image obtained previously by the sequence of operations. This was the resulting binary image should contain only a mouth region if the the person was smiling (the teeth are visible) or no region at all if the person was not smiling. So the suggested the operations are the following:
+
+												|
+Maximum Filter radius 30 -> Gaussian Blurring radius 5-15 -> Binary Layer 0 -> Median 40	|	
+												|--AND--> Result (Nonempty => Teeth, Empty => No smile)
+Binary Layer 3 -> Min 3-5									|
+												|
+
+
+The first trial were performed on the previously identified image from the database exhibiting standard behavior - image number 7. The algorithm was consequently checked for the uncalibrated and calibrated images from the assigned set (99-102). The calibrated images mostly fail to satisfy the expectation - seemingly because they are to be calibrated by the histograms of the image where the person is smiling and that exhibits standard behavior. Otherwise, the algorithms performed well on a number of tried cases from the database exhibiting standard behavior. It was also observed that in the resulting image after the binary AND operation some regions belonging to the ears are captured. This is probably because some ear regions are captured when applying the Binary Layer 3 operation as well as some islands are formed around the ears area when applying the smoothening filters in the first series of operations. This little regions can, nonetheless, be removed if additional Median filter is applied afterwards (radius 15-30).
+
+
+
+
