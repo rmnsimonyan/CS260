@@ -7,4 +7,8 @@ Binary Layers 2 and 3 seem to be working on these images not bad in terms of the
 
 Applying the Blurring filter after the Binary Layer application only makes the extracted region less recognizable. On the other hand, the median filter applied after the Binary Layers helps to smoothen the extracted region by filling the gaps in the structure. So it is reasonable to incorporate this operation in the last stage of the averaged optimal filter.  
 
-Applying the Gaussian blur, min and max filter before the layers helps to smoothen the resulting regions in all cases, blurring giving the most smooth regions. While changing the radius of the filters we notice that 
+Applying the Gaussian blur, min and max filter before the layers helps to smoothen the resulting regions in all cases, blurring giving the most smooth regions. While changing the radius of the filters we notice that the captured area changes its thickness: the larger the radius of the applied filters the thicker the captured area. If the radius is too large the area's initial shape might become hardly recognizable. 
+
+Thus we suggest as an averaged optimal filter the Gaussian Blur with radius around 2 applied before the Binary Layers and the Median filter with radius 0.5-1 applied after the Binary Layers. The other radii significantly away from the mentioned ranges eliminate some structures that may be worth capturing.
+
+For the next task on the investigation of the 
