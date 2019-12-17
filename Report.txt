@@ -1,16 +1,44 @@
 Stage 1
 __________________________________________________________________________________________________________________________________
 
-After applying all the Binary Layers onto four assigned images without pre-manimulations, we observe a behavior close to the standard one for all the pictures. However, we notice that
+After applying all the Binary Layers onto the four assigned images without pre-manimulations, we observe a behavior close to the standard one for all the pictures. However, we notice that
 1. The hair is also captured when applying the Binary Layer 0 as opposed to the definition of standard behavior. 
 2. Binary Layer 1 extracts not as many face pixels as does Binary Layer 0. Binary Layer 0 encompasses too large an area.
-Binary Layers 2 and 3 seem to be working on these images not bad in terms of the standard behavior. However, Binary Layer 2 clearly extracts also an ear area in the images 99, 100, 102 (on 101 ear is not visible) as opposed to the standard behavior. We can also say that Binary Layer 2 also extracts the regions mainly concentrated on lips area, rather than lower nose, also it captures some of the nose area.
+Binary Layers 2 and 3 seem to be working on these images not bad in terms of the standard behavior. However, Binary Layer 2 clearly extracts also an ear area in the images 99, 100, 102 (on 101 ear is not visible) as opposed to the standard behavior. We can also say that Binary Layer 2 also extracts the regions mainly concentrated on lips area, rather than lower nose, though it also captures some of the nose area. Probably, the image exhibiting the behavior closest to standard is 100.
+
 
 Applying the Blurring filter after the Binary Layer application only makes the extracted region less recognizable. On the other hand, the median filter applied after the Binary Layers helps to smoothen the extracted region by filling the gaps in the structure. So it is reasonable to incorporate this operation in the last stage of the averaged optimal filter.  
 
 Applying the Gaussian blur, min and max filter before the layers helps to smoothen the resulting regions in all cases, blurring giving the most smooth regions. While changing the radius of the filters we notice that the captured area changes its thickness: the larger the radius of the applied filters the thicker the captured area. If the radius is too large the area's initial shape might become hardly recognizable. 
 
-Thus we suggest as an averaged optimal filter the Gaussian Blur with radius around 2 applied before the Binary Layers and the Median filter with radius 0.5-1 applied after the Binary Layers. The other radii significantly away from the mentioned ranges eliminate some structures that may be worth capturing.
+Thus we suggest as an averaged optimal filter the Gaussian Blur with radius around 2 applied before the Binary Layers and the Median filter with radius 0.5-1 applied after the Binary Layers. The other radii significantly away from the mentioned ranges may destroy some of the structures that may be worth capturing.
+
+Further we have applied he following kernels matrices by the convolve function for the smoothening reasons:
+
+Kernel Matrix 1:
+6   0.3  9
+0.3 0	 0.2
+8.  0.2	 7
+
+
+Kernel Matrix 2:
+3 1 1 3 1 1 3
+1 1 1 1 1 1 1
+1 1 1 1 1 1 1
+3 1 1 1 1 1 3
+1 1 1 1 1 1 1
+1 1 1 1 1 1 1
+3 1 1 3 1 1 3
+
+Kernel Matrix 3:
+9 9 9 9 9
+9 4 4 4 9
+9 6 6 6 9
+9 2 2 2 9
+9 9 9 9 9
+
+
+All of the matrices when applied make similar results as in the case of Gaussian Blurring of different radii.
 
 For the next task on the investigation of the head rotations and smiling we have observed that the structures like mouth, ears or nose that are captured in the straight-looking image are still recognized and captured in the rotated-head image. Skin is captured as well when applying the Binary Layer 1. Smiling also doesn't change the general behavior after Layers application. The teeth are captured as black regions from Binary Layer 0 and their boundaries are captured after applying the Binary Layer 1.
 
@@ -18,7 +46,9 @@ For the next task on the investigation of the head rotations and smiling we have
 Stage 2
 __________________________________________________________________________________________________________________________________
 
+As an image with a standard behavior - image No 7 from the database was chosen, since the images in the assigned set had particular deviations from the standard behavior. The Histograms from each RGB and HSV channels were extracted. The corresponding cumulative histograms were calculated and normalized rendering the Benchmark Histograms which are presented in the folder Stage 2 under the names Benchmark_Histograms and Benchmark_Histograms_HSV (Correspondingly for RGB and HSV channels). The histograms were fed into the plugins for histogram matching of each channel and applied to the images 99-102 from the assigned dataset. We notice a significant improvements in the results from Binary layers 0 and 1 - the face borders  and the skin pixels are recognized better. However, the results from the Binary Layer 3, that were extracting the lip region in uncalibrated image, are showing worse results after calibration: only a tiny line of lips is extracted. The results from the Binary Layer 2 are not showing significant improvement either. However,, we can say that less region from the lips is extracted compared to the uncalibrated images. Generally we observe that the calibration by HSV channels works better for Binary Layers 2 and 3 than the RGB calibration, and the calibration by RGB channels works better for Binary Layers 0 and 1 than HSV calibration.
 
+* In this task part of the code was used from the textbook by W. Burger, et al.(2016), DOI:10.1007/978-1-4471-6684-9.
 
 Stage 3
 __________________________________________________________________________________________________________________________________
@@ -32,7 +62,9 @@ Binary Layer 3 -> Min 3-5									|
 												|
 
 
-The first trial were performed on the previously identified image from the database exhibiting standard behavior - image number 7. The algorithm was consequently checked for the uncalibrated and calibrated images from the assigned set (99-102). The calibrated images mostly fail to satisfy the expectation - seemingly because they are to be calibrated by the histograms of the image where the person is smiling and that exhibits standard behavior. Otherwise, the algorithms performed well on a number of tried cases from the database exhibiting standard behavior. It was also observed that in the resulting image after the binary AND operation some regions belonging to the ears are captured. This is probably because some ear regions are captured when applying the Binary Layer 3 operation as well as some islands are formed around the ears area when applying the smoothening filters in the first series of operations. This little regions can, nonetheless, be removed if additional Median filter is applied afterwards (radius 15-30).
+The first trial was performed on the previously identified image from the database exhibiting standard behavior - image number 7. The algorithm was consequently checked for the uncalibrated and calibrated images from the assigned set (99-102). The uncalibrated images mostly satisfied the expectation. The algorithms performed well also on randomly chosen cases from the database outside the assigned set and exhibiting standard behavior. It was also observed that in the resulting image after the binary AND operation some regions belonging to the ears are captured. This is probably because some ear regions are captured when applying the Binary Layer 3 operation as well as some islands are formed around the ears area when applying the smoothening filters in the first series of operations. This little regions can, nonetheless, be removed if additional Median filter is applied afterwards (radius 15-30). For the case 102 the person wears braces which hindered a bit the capturing of the teeth, nonetheless we observed a little part of the mouth region captured at the final AND operation in contrast to the non-smiling face. This suggests that the algorithm works regardless the presence of such kind of attributes.
+
+Other trials have been performed as well but without a formulated goal. It seemed that it's possible to recognize the direction of the light by applying the maximum filter of up to 10 radius to the image and then transforming it into a binary. A brighter side losses its boundary/contour.
 
 
 
